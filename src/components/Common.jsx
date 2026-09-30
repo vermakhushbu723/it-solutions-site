@@ -5,10 +5,14 @@ import { bannerImage, partners } from '../data/pages'
 import Icon from './Icon'
 import PartnerLogo from './PartnerLogo'
 
-export function usePageTitle(title) {
+// Same tab title on every page, as on the ProXinet site.
+export const SITE_TITLE = 'ProXinet Technologies — IT Infrastructure Solutions'
+
+// eslint-disable-next-line no-unused-vars
+export function usePageTitle(_title) {
   useEffect(() => {
-    document.title = title ? `${title} - ${site.name}` : site.name
-  }, [title])
+    document.title = SITE_TITLE
+  }, [])
 }
 
 export function Breadcrumbs({ title, trail = [] }) {
