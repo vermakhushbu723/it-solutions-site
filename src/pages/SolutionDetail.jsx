@@ -1,10 +1,8 @@
 import { Link, useLocation, useParams } from 'react-router-dom'
-import { bannerImage, childPage, familyPage, industryPage, servicePage } from '../data/pages'
+import { childPage, familyPage, imageFor, industryPage, servicePage } from '../data/pages'
 import Icon from '../components/Icon'
-import { CallToAction, PartnerStrip, SectionTitle, usePageTitle } from '../components/Common'
+import { ContactStrip, LogoStrip, PageBanner, SectionTitle, usePageTitle } from '../components/Common'
 import NotFound from './NotFound'
-
-const cardColors = ['', 'gold', 'cyan', 'blue']
 
 // One template for solution families, solution items, services and industries.
 function DetailPage({ page: s }) {
@@ -12,33 +10,42 @@ function DetailPage({ page: s }) {
   usePageTitle(s?.title)
   if (!s) return <NotFound />
 
+  const trail = [
+    ...(pathname.startsWith('/solutions') ? [{ label: 'Solutions', to: '/solutions' }] : []),
+    ...(pathname.startsWith('/services') ? [{ label: 'Services', to: '/services' }] : []),
+    ...(pathname.startsWith('/industries') ? [{ label: 'Industries', to: '/industries' }] : []),
+    ...(s.trail ? [s.trail] : []),
+  ]
+
   return (
     <>
-      <section className="page-hero" style={{ '--bg': `url(${bannerImage(pathname)})` }}>
-        <div className="container page-hero-inner">
-          <span className="hero-kicker">{s.kicker}</span>
-          <h1>{s.heroTitle}</h1>
-          <p>{s.heroText}</p>
-          <Link to="/contact" className="btn btn-orange">Book a Free Assessment</Link>
+      <PageBanner title={s.heroTitle} sub={s.heroText} trail={trail} />
+
+      <section className="section">
+        <div className="container row">
+          <div>
+            <SectionTitle sub={s.aboutLabel} title={s.aboutTitle} />
+            <p>{s.about}</p>
+            <Link to="/contact" className="btn btn-primary">Book a Free Assessment</Link>
+          </div>
+          <div className="row-img"><img src={imageFor(pathname)} alt={s.title} loading="lazy" /></div>
         </div>
       </section>
 
       {s.platforms && (
-        <PartnerStrip items={s.platforms.map((name) => ({ name }))} />
+        <section className="section gray-2">
+          <div className="container">
+            <LogoStrip items={s.platforms.map((name) => ({ name }))} />
+          </div>
+        </section>
       )}
 
-      <section className="section">
-        <div className="container two-col align-start">
-          <div>
-            <SectionTitle sub={s.aboutLabel} title={s.aboutTitle} />
-            <p className="lead">{s.about}</p>
-            {s.trail && <p><Link to={s.trail.to}>← All {s.trail.label}</Link></p>}
-            <Link to="/contact" className="btn btn-primary">Talk to an Engineer</Link>
-          </div>
-          <div className="grid grid-2">
-            {s.features.map((f, i) => (
-              <div className={`service-tile ${cardColors[i % 4]}`} key={f.title}>
-                <div className="service-icon"><Icon name={f.icon} size={30} /></div>
+      <section className="section gray-3">
+        <div className="container">
+          <div className={`grid grid-${Math.min(s.features.length, 4)}`}>
+            {s.features.map((f) => (
+              <div className="icon-box" key={f.title}>
+                <div className="icon"><Icon name={f.icon} size={28} /></div>
                 <h3>{f.title}</h3>
                 {f.text && <p>{f.text}</p>}
               </div>
@@ -47,43 +54,36 @@ function DetailPage({ page: s }) {
         </div>
       </section>
 
-      <section className="section gray">
+      <section className="section">
         <div className="container">
           <SectionTitle center sub={s.processLabel} title={s.processTitle} />
-          <div className="grid grid-3">
+          <div className="grid grid-2">
             {s.process.map((p, i) => {
               const body = (
                 <>
-                  <span className="step">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="num">{String(i + 1).padStart(2, '0')}</span>
                   <h3>{p.title}</h3>
                   {p.text && <p>{p.text}</p>}
                 </>
               )
-              return p.to ? (
-                <Link to={p.to} className="process-card link" key={p.title}>{body}</Link>
-              ) : (
-                <div className="process-card" key={p.title}>{body}</div>
-              )
+              return p.to
+                ? <Link to={p.to} className="list-item" key={p.title}>{body}</Link>
+                : <div className="list-item" key={p.title}>{body}</div>
             })}
           </div>
         </div>
       </section>
 
       {s.extra && (
-        <section className="section">
-          <div className="container">
-            <div className="extra-box">
-              <div className="service-icon"><Icon name="shield" size={34} /></div>
-              <div>
-                <h3>{s.extra.title}</h3>
-                <p>{s.extra.text}</p>
-              </div>
-            </div>
+        <section className="section band">
+          <div className="container text-center">
+            <h3>{s.extra.title}</h3>
+            <p>{s.extra.text}</p>
           </div>
         </section>
       )}
 
-      <CallToAction />
+      <ContactStrip title="For demo please contact" gray />
     </>
   )
 }

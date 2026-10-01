@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
 import { site } from '../config/site'
-import { img, photos, values } from '../data/pages'
+import { processSteps, values } from '../data/pages'
 import { leadership } from '../data/proxinet/people'
+import { about } from '../data/pxImages'
 import Icon from '../components/Icon'
-import { Breadcrumbs, CallToAction, PartnerStrip, SectionTitle, usePageTitle } from '../components/Common'
+import { ContactStrip, LogoStrip, PageBanner, SectionTitle, usePageTitle } from '../components/Common'
 
 const pillars = [
   { icon: 'layers', title: 'One-stop IT solutions', text: 'Cloud, security, data center, backup and network in one place.' },
@@ -11,18 +12,26 @@ const pillars = [
   { icon: 'users', title: 'Certified engineers', text: 'OEM-trained, background verified and continuously upskilled.' },
 ]
 
+const moreLinks = [
+  { title: 'Leadership Team', to: '/about/leadership', icon: 'users' },
+  { title: 'Our Story', to: '/about/story', icon: 'star' },
+  { title: 'Our Process', to: '/about/process', icon: 'chart' },
+  { title: 'Certifications', to: '/about/certifications', icon: 'shield' },
+]
+
+const sustainability = values.find((v) => v.title === 'Sustainability')
+
 export default function About() {
   usePageTitle('About')
   return (
     <>
-      <Breadcrumbs title="About Us" />
-      <PartnerStrip />
+      <PageBanner title="About Us" sub="An IT partner that designs the system and answers at 2 a.m." />
 
-      <section className="section gray">
-        <div className="container two-col">
+      <section className="section" id="overview">
+        <div className="container row">
           <div>
-            <SectionTitle sub="About us" title="An IT partner that designs the system and answers at 2 a.m." />
-            <p className="lead">
+            <SectionTitle title="Overview" />
+            <p>
               Our breadth of experience means we can recommend, design, deploy and maintain your IT infrastructure — all
               four. One accountable partner, so the burden of coordinating between multiple vendors does not land on you.
             </p>
@@ -33,19 +42,15 @@ export default function About() {
             </p>
             <Link to="/contact" className="btn btn-primary">Contact Us</Link>
           </div>
-          <div className="about-visual">
-            <div className="visual-card big"><img src={img(photos.openOffice, 900)} alt="ProXinet office" loading="lazy" /></div>
-            <div className="visual-card small a"><Icon name="users" size={36} /></div>
-            <div className="visual-card small b"><Icon name="star" size={36} /></div>
-          </div>
+          <div className="row-img"><img src={about.overview} alt="ProXinet office" loading="lazy" /></div>
         </div>
       </section>
 
-      <section className="section">
+      <section className="section gray-3">
         <div className="container grid grid-3">
           {pillars.map((v) => (
-            <div className="feature-box" key={v.title}>
-              <div className="feature-icon"><Icon name={v.icon} size={30} /></div>
+            <div className="icon-box" key={v.title}>
+              <div className="icon"><Icon name={v.icon} size={28} /></div>
               <h3>{v.title}</h3>
               <p>{v.text}</p>
             </div>
@@ -53,44 +58,76 @@ export default function About() {
         </div>
       </section>
 
-      <section className="section why-dark">
-        <div className="container two-col">
+      <section className="section" id="what-we-believe">
+        <div className="container row reverse">
           <div>
-            <SectionTitle light sub="What we stand for" title="Core values" />
-            <ul className="check-list light">
+            <SectionTitle title="What We Believe" />
+            <ul className="check-list">
               {values.map((r) => (
-                <li key={r.title}><Icon name="check" size={18} /> {r.title} — {r.desc}</li>
+                <li key={r.title}><Icon name="check" size={16} /><span><strong>{r.title}</strong> — {r.desc}</span></li>
               ))}
             </ul>
           </div>
-          <div className="skill-bars">
-            {[['SLA uptime', 99.9], ['Endpoints under active AMC', 95], ['NOC & helpdesk coverage', 100], ['Clients across 9 industries', 92]].map(([l, v]) => (
-              <div className="skill" key={l}>
-                <div className="skill-head"><span>{l}</span><span>{v}%</span></div>
-                <div className="bar"><span style={{ width: `${v}%` }} /></div>
-              </div>
-            ))}
+          <div className="row-img"><img src={about.believe} alt="Our values" loading="lazy" /></div>
+        </div>
+      </section>
+
+      <section className="section gray-1" id="vision">
+        <div className="container row">
+          <div className="row-img"><img src={about.vision} alt="Our vision" loading="lazy" /></div>
+          <div>
+            <SectionTitle title="Vision" />
+            <p>{site.promise}</p>
+            <p>Every engagement follows the same path:</p>
+            <ul className="check-list">
+              {processSteps.map((s) => (
+                <li key={s.n}><Icon name="check" size={16} /><span><strong>{s.title}</strong> — {s.desc}</span></li>
+              ))}
+            </ul>
           </div>
+        </div>
+      </section>
+
+      <section className="section band" id="social-responsibility">
+        <div className="container text-center">
+          <SectionTitle center light title="Social Responsibility" desc={sustainability?.desc} />
         </div>
       </section>
 
       <section className="section">
         <div className="container">
-          <SectionTitle center sub="Team" title="Leadership" />
+          <SectionTitle center title="Leadership" />
           <div className="grid grid-4">
             {leadership.slice(0, 4).map((t) => (
-              <div className="team-card" key={t.name}>
-                <div className="avatar"><Icon name="users" size={48} /></div>
+              <div className="team-box" key={t.name}>
+                <div className="avatar">{t.initials}</div>
                 <h3>{t.name}</h3>
-                <p>{t.role}</p>
+                <span className="role">{t.role}</span>
               </div>
             ))}
           </div>
-          <p className="center-link"><Link to="/about/leadership">View full leadership team →</Link></p>
         </div>
       </section>
 
-      <CallToAction title={`${site.shortName} — ${site.tagline}`} />
+      <section className="section gray-3">
+        <div className="container grid grid-4">
+          {moreLinks.map((l) => (
+            <Link to={l.to} className="icon-box link" key={l.to}>
+              <div className="icon"><Icon name={l.icon} size={28} /></div>
+              <h3>{l.title}</h3>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="section gray-2">
+        <div className="container">
+          <SectionTitle center title="Alliances" />
+          <LogoStrip />
+        </div>
+      </section>
+
+      <ContactStrip />
     </>
   )
 }

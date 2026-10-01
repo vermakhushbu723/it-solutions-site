@@ -49,7 +49,7 @@ function LetterMark({ name, color, size }) {
 }
 
 /** Brand mark for a partner or platform — falls back to a coloured letter badge. */
-export default function PartnerLogo({ name, color = '#d92d21', size = 28 }) {
+export default function PartnerLogo({ name, color = '#0074c7', size = 28 }) {
   const [failed, setFailed] = useState(false)
 
   if (['Microsoft', 'Azure', 'Microsoft Azure', 'M365', 'Microsoft 365'].includes(name)) return <MicrosoftMark size={size} />

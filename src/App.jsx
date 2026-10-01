@@ -4,6 +4,8 @@ import Home from './pages/Home'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import InfoPage from './pages/InfoPage'
+import Clients from './pages/Clients'
+import AllianceDetail from './pages/AllianceDetail'
 import NotFound from './pages/NotFound'
 import { FamilyDetail, IndustryDetail, ServiceDetail, SolutionItemDetail } from './pages/SolutionDetail'
 import { Blog, Industries, Partners, Services, Solutions } from './pages/Listings'
@@ -11,7 +13,7 @@ import { Blog, Industries, Partners, Services, Solutions } from './pages/Listing
 // Pages that use the generic InfoPage template (content lives in data/pages.js)
 const infoRoutes = [
   'about/leadership', 'about/story', 'about/process', 'about/certifications',
-  'clients', 'case-studies', 'case-studies/:slug', 'testimonials', 'procurement',
+  'case-studies', 'case-studies/:slug', 'testimonials', 'procurement',
   'resources', 'resources/whitepapers', 'resources/glossary', 'resources/faq',
   'blog/:slug', 'news-events', 'careers', 'tools', 'tools/:tool', 'services/plans',
 ]
@@ -30,6 +32,8 @@ export default function App() {
         <Route path="industries" element={<Industries />} />
         <Route path="industries/:slug" element={<IndustryDetail />} />
         <Route path="partners" element={<Partners />} />
+        <Route path="partners/:slug" element={<AllianceDetail />} />
+        <Route path="clients" element={<Clients />} />
         <Route path="blog" element={<Blog />} />
         <Route path="contact" element={<Contact />} />
         {infoRoutes.map((p) => (

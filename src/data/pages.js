@@ -20,54 +20,62 @@ export const icon = (name) => iconMap[name] || 'box'
 
 const steps = processSteps.map((s) => ({ title: s.title, text: s.desc }))
 
-/* ---------- Navbar menu (same items as the ProXinet navbar) ---------- */
+/* ---------- Navbar menu (same structure as proxinet.in) ---------- */
+const sol = (fam, slug) => (slug ? `/solutions/${fam}/${slug}` : `/solutions/${fam}`)
 export const menu = [
+  { label: 'Home', to: '/' },
   {
-    label: 'Solutions', to: '/solutions',
-    children: solutionFamilies.map((f) => ({ label: f.name, to: `/solutions/${f.slug}` })),
+    label: 'Solution', to: '/solutions',
+    children: [
+      { label: 'Cloud Solutions', to: sol('cloud'), children: [
+        { label: 'Azure', to: sol('cloud', 'microsoft-azure') },
+        { label: 'AWS', to: sol('cloud', 'aws') },
+        { label: 'Microsoft 365', to: sol('cloud', 'microsoft-365') },
+        { label: 'Google Cloud', to: sol('cloud', 'google-cloud') },
+      ] },
+      { label: 'Security Solution', to: sol('cyber-security'), children: [
+        { label: 'End Point Solutions', to: sol('cyber-security', 'endpoint-security') },
+        { label: 'Email Security', to: sol('cyber-security', 'email-security') },
+        { label: 'SSL and VPN', to: sol('cyber-security', 'ssl-vpn') },
+        { label: 'Data Loss Prevention', to: sol('cyber-security', 'data-loss-prevention') },
+        { label: 'Mobile Device Management', to: sol('cyber-security', 'mobile-device-management') },
+        { label: 'Proxy and Content Filters', to: sol('cyber-security', 'web-proxy-filtering') },
+      ] },
+      { label: 'Data Center Solutions', to: sol('data-center'), children: [
+        { label: 'Virtualization', to: sol('data-center', 'server-virtualization') },
+        { label: 'Server', to: sol('data-center', 'servers') },
+        { label: 'SAN', to: sol('data-center', 'san-storage') },
+        { label: 'NAS', to: sol('data-center', 'nas-storage') },
+      ] },
+      { label: 'Backup Solutions', to: sol('backup-dr'), children: [
+        { label: 'Backup', to: sol('backup-dr', 'veeam-backup') },
+      ] },
+      { label: 'Network Solutions', to: sol('network'), children: [
+        { label: 'Wired', to: sol('network', 'structured-cabling') },
+        { label: 'Wireless', to: sol('network', 'enterprise-wifi') },
+      ] },
+    ],
   },
   {
     label: 'Services', to: '/services',
     children: [
-      ...services.map((s) => ({ label: s.name, to: `/services/${s.slug}` })),
-      { label: 'SLA & Support Plans', to: '/services/plans' },
+      { label: 'Infrastructure Services', to: '/services/infrastructure-assessment' },
+      { label: 'Data Center Services', to: sol('data-center') },
+      { label: 'Network Services', to: sol('network') },
+      { label: 'Cloud Services', to: sol('cloud') },
     ],
   },
-  {
-    label: 'Industries', to: '/industries',
-    children: industries.map((i) => ({ label: i.name, to: `/industries/${i.slug}` })),
-  },
-  {
-    label: 'Why ProXinet', to: '/about',
-    children: [
-      { label: 'About Us', to: '/about' },
-      { label: 'Leadership Team', to: '/about/leadership' },
-      { label: 'Our Story', to: '/about/story' },
-      { label: 'Our Process', to: '/about/process' },
-      { label: 'Clients', to: '/clients' },
-      { label: 'Case Studies', to: '/case-studies' },
-      { label: 'Testimonials', to: '/testimonials' },
-      { label: 'Partners & Alliances', to: '/partners' },
-      { label: 'Certifications', to: '/about/certifications' },
-      { label: 'Procurement Pack', to: '/procurement' },
-    ],
-  },
+  { label: 'Client', to: '/clients' },
   {
     label: 'Resources', to: '/resources',
     children: [
-      { label: 'Blog', to: '/blog' },
-      { label: 'Whitepapers', to: '/resources/whitepapers' },
-      { label: 'Glossary', to: '/resources/glossary' },
-      { label: 'FAQs', to: '/resources/faq' },
-      { label: 'Cloud Cost Calculator', to: '/tools/cloud-cost-calculator' },
-      { label: 'IT Security Health Score', to: '/tools/security-health-score' },
-      { label: 'AMC Plan Selector', to: '/tools/amc-plan-selector' },
-      { label: 'All tools', to: '/tools' },
-      { label: 'News & Events', to: '/news-events' },
-      { label: 'Careers', to: '/careers' },
+      { label: 'News', to: '/news-events' },
+      { label: 'Events', to: '/news-events#events' },
     ],
   },
+  { label: 'Alliances', to: '/partners' },
   { label: 'Contact', to: '/contact' },
+  { label: 'About', to: '/about' },
 ]
 
 /* ---------- Detail pages (SolutionDetail template) ---------- */
@@ -265,7 +273,7 @@ export const infoPages = {
     cards: tools.map((t) => ({ title: t.t, text: t.d, icon: t.ic, to: `/tools/${t.slug}` })),
   },
   '/news-events': {
-    title: 'News & Events', sub: 'Company', heading: 'News & Events',
+    title: 'News & Events', sub: 'Company', heading: 'News & Events', anchor: 'events',
     cards: news.map((n) => ({ title: n.title, meta: `${n.type} · ${fmtDate(n.date)}`, text: n.desc })), style: 'process',
   },
   '/careers': {
@@ -321,12 +329,5 @@ posts.forEach((p) => {
 
 export const blogDate = fmtDate
 
-/* ---------- Images (from ProXinet's image library, matched to each page's content) ---------- */
-export {
-  img, photos, familyImg, solutionImg, serviceImg, industryImg, caseImg, postImg, toolImg,
-} from './proxinet/images'
-import { heroImageFor as proxHero, img as pImg, photos as pPhotos } from './proxinet/images'
-
-// Background photo for any route's banner; falls back to a generic office photo.
-export const bannerImage = (pathname) =>
-  proxHero(pathname) || pImg(pathname === '/' ? pPhotos.datacenter : pPhotos.officeSpace, 1920)
+/* ---------- Images (downloaded from proxinet.in, see data/pxImages.js) ---------- */
+export { bannerFor as bannerImage, imageFor } from './pxImages'
