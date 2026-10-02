@@ -137,7 +137,7 @@ export function ScrollToTop() {
 }
 
 // Counts up from 0 when scrolled into view.
-export function Counter({ end, suffix = '' }) {
+export function Counter({ end, suffix = '', decimals = 0 }) {
   const [val, setVal] = useState(0)
   const [ref, setRef] = useState(null)
   useEffect(() => {
@@ -148,7 +148,7 @@ export function Counter({ end, suffix = '' }) {
       const start = performance.now()
       const tick = (t) => {
         const p = Math.min((t - start) / 1500, 1)
-        setVal(Math.round(end * p))
+        setVal(end * p)
         if (p < 1) requestAnimationFrame(tick)
       }
       requestAnimationFrame(tick)
@@ -156,5 +156,5 @@ export function Counter({ end, suffix = '' }) {
     io.observe(ref)
     return () => io.disconnect()
   }, [ref, end])
-  return <span ref={setRef}>{val}{suffix}</span>
+  return <span ref={setRef}>{val.toFixed(decimals)}{suffix}</span>
 }

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { company } from '../data/proxinet/company'
-import Icon, { SocialIcon } from './Icon'
+import Icon from './Icon'
 
 /* ---------- Scripted assistant (from the ProXinet project) ---------- */
 const quickReplies = [
@@ -28,14 +27,25 @@ const answer = (q) => {
   return { text: 'This is best discussed with an engineer. Send us your requirement and we will reply within two working hours.', cta: { label: 'Contact us', to: '/contact' } }
 }
 
+const MAX = 500
+
+// microsoft.com "Store Assistant" style panel: light-blue sheet, white bubbles, outlined input with a counter.
 function ChatPanel({ onClose }) {
-  const [msgs, setMsgs] = useState([{ from: 'bot', text: 'Hello! I am the ProXinet assistant. What are you looking for?' }])
+  const [msgs, setMsgs] = useState([{ from: 'bot', text: "Hi, I'm the ProXinet Assistant. I can help you with our IT solutions, services and support, or connect you with one of our engineers. What can I do for you today?" }])
   const [val, setVal] = useState('')
   const boxRef = useRef(null)
+  const inputRef = useRef(null)
 
   useEffect(() => {
     boxRef.current?.scrollTo({ top: boxRef.current.scrollHeight, behavior: 'smooth' })
   }, [msgs])
+
+  useEffect(() => {
+    inputRef.current?.focus()
+    const onKey = (e) => e.key === 'Escape' && onClose()
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
 
   const send = (text) => {
     const t = (text ?? val).trim()
@@ -45,15 +55,21 @@ function ChatPanel({ onClose }) {
     setTimeout(() => setMsgs((m) => [...m, { from: 'bot', ...answer(t) }]), 400)
   }
 
+  const restart = () => {
+    setMsgs((m) => m.slice(0, 1))
+    setVal('')
+  }
+
   return (
-    <div className="chat-panel" role="dialog" aria-label="ProXinet assistant">
+    <div className="chat-panel ms-chat" role="dialog" aria-label="ProXinet Assistant">
       <div className="chat-head">
-        <span className="chat-avatar"><Icon name="robot" size={20} /></span>
-        <span>
-          <strong>ProXinet Assistant</strong>
-          <small>Usually replies instantly</small>
+        <span className="chat-avatar"><Icon name="chat" size={22} /></span>
+        <strong>ProXinet Assistant</strong>
+        <span className="chat-head-actions">
+          <button onClick={restart} aria-label="New conversation" title="New conversation"><Icon name="plus" size={20} /></button>
+          <button onClick={onClose} aria-label="Minimise chat" title="Minimise"><Icon name="chevron" size={20} /></button>
+          <button onClick={onClose} aria-label="Close chat" title="Close"><Icon name="close" size={20} /></button>
         </span>
-        <button onClick={onClose} aria-label="Close chat"><Icon name="close" size={18} /></button>
       </div>
       <div className="chat-body" ref={boxRef}>
         {msgs.map((m, i) => (
@@ -62,21 +78,35 @@ function ChatPanel({ onClose }) {
             {m.cta && <Link to={m.cta.to} onClick={onClose}>{m.cta.label} →</Link>}
           </div>
         ))}
+        {msgs.length === 1 && (
+          <div className="quick">
+            {quickReplies.map((q) => <button key={q} onClick={() => send(q)}>{q}</button>)}
+          </div>
+        )}
       </div>
       <div className="chat-foot">
-        <div className="quick">
-          {quickReplies.map((q) => <button key={q} onClick={() => send(q)}>{q}</button>)}
-        </div>
         <form onSubmit={(e) => { e.preventDefault(); send() }}>
-          <input value={val} onChange={(e) => setVal(e.target.value)} placeholder="Type your question…" aria-label="Message" />
-          <button type="submit" aria-label="Send"><Icon name="send" size={18} /></button>
+          <textarea
+            ref={inputRef}
+            rows={2}
+            value={val}
+            maxLength={MAX}
+            onChange={(e) => setVal(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() } }}
+            placeholder="Ask me anything…"
+            aria-label="Message"
+          />
+          <div className="chat-input-bar">
+            <span>{val.length} / {MAX}</span>
+            <button type="submit" aria-label="Send" disabled={!val.trim()}><Icon name="send" size={20} /></button>
+          </div>
         </form>
       </div>
     </div>
   )
 }
 
-/* ---------- Floating buttons: back-to-top, call, WhatsApp, chat ---------- */
+/* ---------- Floating actions: back-to-top and the "Need help? Let's chat" launcher ---------- */
 export default function FloatingActions() {
   const [chat, setChat] = useState(false)
   const [showTop, setShowTop] = useState(false)
@@ -86,8 +116,6 @@ export default function FloatingActions() {
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
-
-  const wa = `https://wa.me/${company.whatsapp}?text=${encodeURIComponent('Hi ProXinet, I would like to talk about IT infrastructure.')}`
 
   return (
     <>
@@ -99,18 +127,15 @@ export default function FloatingActions() {
         >
           <Icon name="chevron" size={20} className="rot-180" />
         </button>
-        <a className="fab fab-call" href={`tel:${company.phones[0]}`} aria-label={`Call ${company.phones[0]}`}>
-          <span className="fab-label">Call us</span>
-          <Icon name="phone" size={22} />
-        </a>
-        <a className="fab fab-wa" href={wa} target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp">
-          <span className="fab-label">WhatsApp</span>
-          <SocialIcon name="whatsapp" size={26} />
-        </a>
-        <button className="fab fab-chat" onClick={() => setChat((c) => !c)} aria-label="Open chat assistant" aria-expanded={chat}>
-          <span className="fab-label">Chat with us</span>
-          <Icon name={chat ? 'close' : 'chat'} size={24} />
-        </button>
+        {!chat && (
+          <button className="chat-launcher" onClick={() => setChat(true)} aria-label="Need help? Let's chat" aria-expanded={chat}>
+            <span className="chat-launcher-avatar">
+              <img src="/images/photos/chat-avatar.jpg" alt="" />
+              <span className="chat-launcher-badge"><Icon name="chat" size={12} /></span>
+            </span>
+            <span className="chat-launcher-text">Need help?<br />Let&apos;s chat</span>
+          </button>
+        )}
       </div>
       {chat && <ChatPanel onClose={() => setChat(false)} />}
     </>

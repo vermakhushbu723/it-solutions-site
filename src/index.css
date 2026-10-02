@@ -19,13 +19,14 @@
   --brand-red-dark: #971a13;
   --shadow: 0 6px 24px rgba(16, 38, 64, .08);
   --shadow-hover: 0 12px 32px rgba(16, 38, 64, .14);
+  --font: "Segoe UI", SegoeUI, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 body {
   margin: 0;
-  font-family: 'Lato', sans-serif;
+  font-family: var(--font);
   font-size: 16px;
   line-height: 1.7;
   color: var(--text);
@@ -47,10 +48,36 @@ img { max-width: 100%; display: block; }
 
 /* ---------- Buttons (text always centred) ---------- */
 .btn {
+  position: relative; z-index: 0;
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   min-height: 46px; padding: 0 26px; margin: 0;
-  font: 700 15px/1 'Lato', sans-serif; letter-spacing: .02em; text-align: center; white-space: nowrap;
+  font: 700 15px/1 var(--font); letter-spacing: .02em; text-align: center; white-space: nowrap;
   border: 2px solid transparent; border-radius: var(--radius); cursor: pointer; transition: all .3s;
+}
+
+/* Hover for every button: white fill, red text/border, with an animated border stroke that draws around the edge. */
+.btn:not(.btn-quote):not(.btn-linkedin):hover {
+  color: var(--brand-red); background: #fff; border-color: var(--brand-red);
+}
+.btn:not(.btn-quote):not(.btn-linkedin)::before,
+.btn:not(.btn-quote):not(.btn-linkedin)::after {
+  content: ''; position: absolute; width: 0; height: 0; box-sizing: border-box;
+  border-radius: inherit; pointer-events: none;
+}
+.btn:not(.btn-quote):not(.btn-linkedin)::before { top: 0; left: 0; }
+.btn:not(.btn-quote):not(.btn-linkedin)::after { right: 0; bottom: 0; }
+.btn:not(.btn-quote):not(.btn-linkedin):hover::before {
+  width: 100%; height: 100%;
+  border-top: 2px solid var(--brand-red); border-right: 2px solid var(--brand-red);
+  transition: width .15s ease-out, height .15s ease-out .15s;
+}
+.btn:not(.btn-quote):not(.btn-linkedin):hover::after {
+  width: 100%; height: 100%;
+  border-bottom: 2px solid var(--brand-red); border-left: 2px solid var(--brand-red);
+  transition: width .15s ease-out .3s, height .15s ease-out .45s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn::before, .btn::after { transition: none !important; }
 }
 .btn-primary { color: #fff; background: var(--brand-red); border-color: var(--brand-red); }
 .btn-primary:hover { color: #fff; background: var(--brand-red-dark); border-color: var(--brand-red-dark); }
@@ -269,7 +296,7 @@ a.list-item:hover h3 { color: var(--primary); }
 .form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .form .full { grid-column: 1 / -1; }
 .form input, .form select, .form textarea {
-  width: 100%; height: 50px; padding: 0 16px; font: 400 15px 'Lato', sans-serif; color: var(--heading);
+  width: 100%; height: 50px; padding: 0 16px; font: 400 15px var(--font); color: var(--heading);
   background: #fff; border: 1px solid var(--border); border-radius: var(--radius); outline: none; transition: border-color .3s, box-shadow .3s;
 }
 .form textarea { height: auto; min-height: 130px; padding-top: 14px; resize: vertical; }
@@ -369,36 +396,36 @@ a.list-item:hover h3 { color: var(--primary); }
 .msg a { display: block; margin-top: 6px; font-weight: 700; font-size: 13px; color: var(--brand-red); }
 .chat-foot { padding: 10px 12px 12px; border-top: 1px solid var(--border); }
 .quick { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-.quick button { padding: 4px 10px; border: 1px solid var(--border); border-radius: 20px; font: 12px "Lato", sans-serif; color: var(--text); background: #fff; cursor: pointer; }
+.quick button { padding: 4px 10px; border: 1px solid var(--border); border-radius: 20px; font: 12px var(--font); color: var(--text); background: #fff; cursor: pointer; }
 .quick button:hover { color: var(--brand-red); border-color: var(--brand-red); }
 .chat-foot form { display: flex; gap: 8px; }
-.chat-foot input { flex: 1; height: 42px; padding: 0 12px; border: 1px solid var(--border); border-radius: 8px; font: 14px "Lato", sans-serif; outline: none; }
+.chat-foot input { flex: 1; height: 42px; padding: 0 12px; border: 1px solid var(--border); border-radius: 8px; font: 14px var(--font); outline: none; }
 .chat-foot input:focus { border-color: var(--brand-red); }
 .chat-foot form button { display: flex; align-items: center; justify-content: center; width: 42px; border: 0; border-radius: 8px; color: #fff; background: var(--brand-red); cursor: pointer; }
 
 /* ---------- Footer (light, compact) ---------- */
 .site-footer {
-  color: #3b4652; background-color: var(--footer-bg);
-  background-image: radial-gradient(rgba(0,0,0,.05) 1.2px, transparent 1.2px);
+  color: #e0e0e0; background-color: #111;
+  background-image: radial-gradient(rgba(255,255,255,.05) 1.2px, transparent 1.2px);
   background-size: 18px 18px;
-  border-top: 4px solid var(--primary);
+  border-top: 4px solid var(--brand-red);
 }
 .footer-top { display: grid; grid-template-columns: 1.3fr 1fr .8fr 1.3fr; gap: 40px; padding-top: 50px; padding-bottom: 36px; }
 .footer-logo { display: inline-block; width: 130px; }
 .footer-logo img { width: 100%; height: auto; }
-.footer-about p { margin: 14px 0 0; font-size: 15px; line-height: 1.7; }
-.widget-title { margin-bottom: 16px; font-size: 1.15rem; color: var(--heading); }
+.footer-about p { margin: 14px 0 0; font-size: 15px; line-height: 1.7; color: #e0e0e0; }
+.site-footer .widget-title { margin-bottom: 16px; font-size: 1.15rem; color: #fff; }
 .site-map li { margin-bottom: 8px; }
-.site-map a { font-size: 15px; color: #3b4652; }
-.site-map a:hover { color: var(--primary); }
-.contact-list li { display: flex; gap: 12px; margin-bottom: 10px; font-size: 15px; line-height: 1.6; }
-.contact-list svg { flex: none; margin-top: 2px; color: var(--primary); }
-.contact-list a { color: #3b4652; }
-.contact-list a:hover { color: var(--primary); }
+.site-map a { font-size: 15px; color: #e0e0e0; transition: color .3s; }
+.site-map a:hover { color: #fff; }
+.contact-list li { display: flex; gap: 12px; margin-bottom: 10px; font-size: 15px; line-height: 1.6; color: #e0e0e0; }
+.contact-list svg { flex: none; margin-top: 2px; color: #fff; }
+.contact-list a { color: #e0e0e0; transition: color .3s; }
+.contact-list a:hover { color: #fff; }
 .social { display: flex; gap: 8px; margin-top: 18px; }
-.social a { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; color: #1d2733; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.06); transition: all .3s; }
-.social a:hover { color: #fff; background: var(--primary); }
-.footer-bottom { padding: 14px 0; background: rgba(255,255,255,.6); font-size: 14px; }
+.social a { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; color: #1d2733; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.12); transition: all .3s; }
+.social a:hover { color: var(--brand-red); background: #fff; transform: translateY(-3px); box-shadow: 0 6px 14px rgba(0,0,0,.2); }
+.footer-bottom { padding: 14px 0; background: rgba(0,0,0,.18); color: #eaeaea; font-size: 14px; }
 .footer-bottom-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
 .footer-bottom p { margin: 0; }
 
@@ -644,7 +671,7 @@ a.list-item:hover h3 { color: var(--primary); }
 .slider-tabs { position: absolute; left: 0; right: 0; bottom: 64px; z-index: 5; display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
 .slider-tabs button {
   display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 0; border: 0; text-align: left;
-  color: rgba(255,255,255,.55); background: none; cursor: pointer; font: 700 13px 'Lato', sans-serif; transition: color .3s;
+  color: rgba(255,255,255,.55); background: none; cursor: pointer; font: 700 13px var(--font); transition: color .3s;
 }
 .slider-tabs button:hover, .slider-tabs button.active { color: #fff; }
 .tab-num { font-size: 12px; opacity: .8; }
@@ -906,6 +933,9 @@ a.logo-tile { cursor: pointer; }
 
 .simple-logos.plain img { border: 0; background: transparent; }
 
+/* ---------- Our Clients: two endless logo sliders (row 1 right→left, row 2 left→right) ---------- */
+.client-sliders { display: grid; gap: 20px; }
+
 .simple-band.light { background: var(--gray-1); color: var(--text); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 .simple-band.light h2 { color: var(--heading); }
 .simple-band.light .simple-stats { gap: 0; }
@@ -930,18 +960,22 @@ a.logo-tile { cursor: pointer; }
 @media (max-width: 991px) { .hero-caption h2 { font-size: 2.3rem; } .hero-caption p { font-size: 1.1rem; } }
 @media (max-width: 600px) { .hero-caption h2 { font-size: 1.8rem; } .hero-caption p { font-size: 1rem; } .hero-cta { min-height: 48px; font-size: 16px; } }
 
-/* ---------- Our Services: plain, large, high-contrast (easy to read) ---------- */
-.plain-services { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1000px; margin: 0 auto; }
-.plain-service { display: block; padding: 24px 26px; color: #333; background: #fff; border: 1px solid #d9dee5; border-radius: 4px; }
-.plain-service:hover { color: #333; border-color: var(--brand-red); }
-.plain-service h3 { margin: 0 0 8px; font-size: 20px; line-height: 1.35; color: #1a1a1a; }
-.plain-service p { margin: 0 0 12px; font-size: 17px; line-height: 1.65; color: #333; }
-.plain-more { font-size: 16px; font-weight: 700; color: var(--brand-red); text-decoration: underline; text-underline-offset: 3px; }
-@media (max-width: 760px) { .plain-services { grid-template-columns: 1fr; } }
+/* ---------- Our Services: clean cards (padded inset image, dark title, gray text, solid button) ---------- */
+.plain-services { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; max-width: 1140px; margin: 0 auto; }
+.plain-service { display: flex; flex-direction: column; padding: 16px; color: #333; background: #fff; border: 1px solid #e4e8ee; border-radius: 16px; box-shadow: 0 10px 30px rgba(16,38,64,.08); transition: transform .3s, box-shadow .3s; }
+.plain-service:hover { color: #333; transform: translateY(-5px); box-shadow: 0 18px 44px rgba(16,38,64,.16); }
+.plain-service-img { aspect-ratio: 16 / 11; overflow: hidden; border-radius: 12px; background: var(--gray-2); }
+.plain-service-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.plain-service:hover .plain-service-img img { transform: scale(1.05); }
+.plain-service-body { display: flex; flex-direction: column; flex: 1; padding: 22px 12px 12px; }
+.plain-services .plain-service h3 { margin: 0 0 12px; font-size: 22px; line-height: 1.3; font-weight: 800; color: #1a1a1a; }
+.plain-services .plain-service p { margin: 0 0 26px; font-size: 16px; line-height: 1.6; font-weight: 400; color: #5f6b78; }
+.plain-more { display: inline-block; align-self: flex-start; margin-top: auto; padding: 12px 26px; border-radius: 6px; font-size: 15px; font-weight: 700; color: #fff; background: var(--brand-red); text-decoration: none; transition: background .3s; }
+.plain-service:hover .plain-more { background: var(--brand-red-dark); }
+@media (max-width: 991px) { .plain-services { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) { .plain-services { grid-template-columns: 1fr; } }
 
-/* Bold text for easier reading: Services + hero line */
-.plain-service p { font-weight: 700; }
-.plain-service h3 { font-weight: 700; }
+/* Bold hero line for easier reading */
 .hero-caption p { font-weight: 700; }
 
 /* Headings: extra bold and darker */
@@ -952,3 +986,410 @@ h1, h2, h3, h4,
 }
 .hero-caption h2, .banner h1, .banner h2, .simple-band:not(.light) h2, .section.band h2, .section.band h3 { color: #fff; }
 .simple-photo.caption h3, .tile h2, .flip-back h3, .about-card h3, .chat-head strong { color: #fff; }
+
+/* ---------- Hero: caption on the right for selected slides ---------- */
+.slider.photo-only .banner.cap-right { text-align: right; }
+.slider.photo-only .banner.cap-right .hero-caption { margin-left: auto; }
+.slider.photo-only .banner.cap-right::before { background: linear-gradient(90deg, rgba(3,10,40,.1) 15%, rgba(3,10,40,.45) 50%, rgba(3,10,40,.78) 100%); }
+@media (max-width: 600px) {
+  .slider.photo-only .banner.cap-right { text-align: left; }
+  .slider.photo-only .banner.cap-right .hero-caption { margin-left: 0; }
+  .slider.photo-only .banner.cap-right::before { background: linear-gradient(90deg, rgba(3,10,40,.78) 0%, rgba(3,10,40,.45) 50%, rgba(3,10,40,.1) 85%); }
+}
+
+/* =====================================================================
+   Landing page = microsoft.com/en-in (values measured from the live page at 1440px):
+   Segoe UI Variable, 1328px content + 5vw gutters, 48px section padding,
+   4-up feature cards (24px radius, 8px inset image), #0078d4 buttons (8px radius),
+   32/40 section headings, #dceef8 tinted band.
+   ===================================================================== */
+.ms-home {
+  --ms-blue: #0078d4;
+  --ms-blue-hover: #106ebe;
+  --ms-blue-active: #005a9e;
+  --ms-ink: #0e1726;
+  --ms-text: #17253d;
+  --ms-tint: #dceef8;
+  --ms-border: #e7e7e7;
+  --ms-radius: 24px;
+  --ms-shadow: 0 0 2px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.14);
+  --ms-shadow-hover: 0 0 2px rgba(0,0,0,.12), 0 8px 16px rgba(0,0,0,.14);
+  --ms-font: "Segoe UI Variable Text", "Segoe UI", SegoeUI, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ms-font-display: "Segoe UI Variable Display", "Segoe UI", SegoeUI, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 400 16px/24px var(--ms-font);
+  color: #000;
+}
+.ms-home .container { max-width: calc(1328px + 10vw); padding: 0 5vw; }
+.ms-home h1, .ms-home h2, .ms-home h3, .ms-home h4,
+.ms-home .simple-title, .ms-home .sec-title .title, .ms-home .plain-service h3 {
+  font-family: var(--ms-font-display); color: var(--ms-ink); letter-spacing: 0;
+}
+.ms-home p { color: var(--ms-text); }
+
+/* Sections: 48px top/bottom, plain white or the light-blue band */
+.ms-home .section { padding: 48px 0; }
+.ms-home .section.gray-1 { background: var(--ms-tint); }
+
+/* Section headings: 32/40 weight 500, left aligned, 48px above the content, no underline */
+.ms-home .simple-title, .ms-home .sec-title .title { font-size: 32px; line-height: 40px; font-weight: 500; margin: 0 0 16px; }
+.ms-home .simple-title.center { text-align: left; margin-bottom: 48px; }
+.ms-home .simple-title.underline::after, .ms-home .divider { display: none; }
+.ms-home .sec-title { margin-bottom: 24px; }
+.ms-home .sec-title .sub-text { color: var(--ms-text); font-size: 14px; line-height: 20px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+
+/* Buttons: 15/22 semibold, 8px radius; primary 40px tall (8px 16px), blue; secondary white */
+.ms-home .btn {
+  min-height: 40px; padding: 8px 16px; border: 1px solid transparent; border-radius: 8px;
+  font: 600 15px/22px var(--ms-font); letter-spacing: 0;
+  transition: background-color .15s, color .15s, border-color .15s, box-shadow .15s;
+}
+.ms-home .btn::before, .ms-home .btn::after { display: none !important; }
+.ms-home .btn-primary { color: #fff; background: var(--ms-blue); border-color: var(--ms-blue); }
+.ms-home .btn-primary:hover, .ms-home .btn-primary:focus-visible { color: #fff; background: var(--ms-blue-hover); border-color: var(--ms-blue-hover); }
+.ms-home .btn-primary:active { background: var(--ms-blue-active); border-color: var(--ms-blue-active); }
+.ms-home .btn-outline { color: var(--ms-ink); background: #fff; border-color: #d1d1d1; }
+.ms-home .btn-outline:hover, .ms-home .btn-outline:focus-visible { color: var(--ms-ink); background: #f5f5f5; border-color: #c7c7c7; }
+.ms-home .btn:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+.ms-home .center-link { justify-content: flex-start; margin-top: 32px; }
+
+/* Hero: 580px tall, 48/56 weight 500 heading, 16/24 text, white 48px "Learn more" button */
+.ms-home .slider { height: 580px; }
+.ms-home .hero-caption { max-width: 585px; }
+.ms-home .hero-caption h2 { font: 500 48px/56px var(--ms-font-display); color: #f4fafd; margin: 0 0 16px; text-transform: none; }
+.ms-home .hero-caption p { font: 400 16px/24px var(--ms-font); color: #f4fafd; margin: 0 0 24px; }
+.ms-home .hero-cta { min-height: 48px; padding: 12px 17px; color: var(--ms-ink); background: #fff; border-color: #fff; }
+.ms-home .hero-cta:hover, .ms-home .hero-cta:focus-visible { color: var(--ms-ink); background: #f0f0f0; border-color: #f0f0f0; }
+
+/* About: Microsoft "banner card" - text left, image right, inside one rounded card */
+.ms-home .section.about-home { padding: 48px 0; }
+.ms-home .simple-about {
+  grid-template-columns: 1fr 1fr; gap: 0; align-items: stretch; overflow: hidden;
+  width: calc(100% - 10vw); max-width: 1328px; padding: 0;
+  background: #fff; border-radius: var(--ms-radius); box-shadow: var(--ms-shadow);
+}
+.ms-home .simple-about > div:first-child { display: flex; flex-direction: column; justify-content: center; padding: 48px; }
+.ms-home .simple-about .simple-title { font-size: 32px; line-height: 40px; }
+.ms-home .simple-about p { font-size: 16px; line-height: 24px; margin-bottom: 16px; }
+.ms-home .simple-about .btn { align-self: flex-start; margin-top: 48px; }
+.ms-home .simple-about-img { padding: 8px 8px 8px 0; }
+.ms-home .simple-about-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 16px; }
+.ms-home .tick-list { gap: 8px; margin: 0; }
+.ms-home .tick-list li { font-size: 16px; line-height: 24px; color: var(--ms-text); }
+.ms-home .tick-list svg { color: var(--ms-blue); }
+
+/* Our Services: 4 per row, 16px gap, Microsoft feature card */
+.ms-home .plain-services { grid-template-columns: repeat(4, 1fr); gap: 16px; max-width: none; }
+.ms-home .plain-service {
+  padding: 0; overflow: hidden; color: #000; background: #fff;
+  border: 1px solid var(--ms-border); border-radius: var(--ms-radius); box-shadow: var(--ms-shadow);
+  transition: box-shadow .2s ease;
+}
+.ms-home .plain-service:hover { color: #000; transform: none; box-shadow: var(--ms-shadow-hover); }
+.ms-home .plain-service-img { aspect-ratio: auto; padding: 8px 8px 0; background: none; border-radius: 0; overflow: visible; }
+.ms-home .plain-service-img img { aspect-ratio: 16 / 9; border-radius: 16px; }
+.ms-home .plain-service:hover .plain-service-img img { transform: none; }
+.ms-home .plain-service-body { padding: 24px; }
+.ms-home .plain-services .plain-service h3 { margin: 0 0 16px; font: 600 20px/28px var(--ms-font-display); color: var(--ms-ink); }
+.ms-home .plain-services .plain-service p { margin: 0 0 48px; font: 400 16px/24px var(--ms-font); color: var(--ms-text); }
+.ms-home .plain-more {
+  margin-top: auto; padding: 8px 16px; border-radius: 8px; font: 600 15px/22px var(--ms-font);
+  color: #fff; background: var(--ms-blue); transition: background-color .15s;
+}
+.ms-home .plain-service:hover .plain-more { background: var(--ms-blue-hover); }
+
+/* Portfolio / Solutions: rounded cards, title under the image like a feature card */
+.ms-home .grid-2 { gap: 16px; }
+.ms-home .simple-photo.caption {
+  display: flex; flex-direction: column; overflow: hidden; background: #fff;
+  border: 1px solid var(--ms-border); border-radius: var(--ms-radius); box-shadow: var(--ms-shadow); transition: box-shadow .2s;
+}
+.ms-home .simple-photo.caption:hover { box-shadow: var(--ms-shadow-hover); }
+.ms-home .simple-photo.caption img { margin: 8px 8px 0; width: calc(100% - 16px); border-radius: 16px; }
+.ms-home .simple-photo.caption h3,
+.ms-home .simple-photo.caption:hover h3 {
+  position: static; padding: 24px; font: 600 20px/28px var(--ms-font-display); color: var(--ms-ink); background: none;
+}
+
+/* Clients logos */
+.ms-home .logo-img-card { border-color: var(--ms-border); border-radius: 16px; }
+
+/* Company band: light-blue band, 32/40 heading, stat cards with blue numbers */
+.ms-home .simple-band.light { background: var(--ms-tint); border: 0; }
+.ms-home .simple-band.light .text-center { text-align: left; }
+.ms-home .simple-band h2 { font: 500 32px/40px var(--ms-font-display); }
+.ms-home .simple-band p { font-size: 16px; line-height: 24px; color: var(--ms-text); }
+.ms-home .simple-band.light .simple-stats { justify-content: flex-start; gap: 16px; margin-top: 32px; }
+.ms-home .simple-band.light .simple-stats li,
+.ms-home .simple-band.light .simple-stats li + li {
+  flex: 1 1 200px; padding: 24px; border: 1px solid var(--ms-border); border-radius: var(--ms-radius);
+  background: #fff; box-shadow: var(--ms-shadow); font-size: 16px; line-height: 24px; color: var(--ms-text);
+}
+.ms-home .simple-band.light .simple-stats strong { font: 600 32px/40px var(--ms-font-display); color: var(--ms-blue); }
+
+/* Contact form: Fluent inputs */
+.ms-home .contact-strip .row { gap: 48px; }
+.ms-home .form { gap: 16px; }
+.ms-home .form input, .ms-home .form select, .ms-home .form textarea {
+  height: 40px; padding: 0 12px; font: 400 15px var(--ms-font); color: #242424;
+  border: 1px solid #d1d1d1; border-bottom-color: #616161; border-radius: 8px;
+}
+.ms-home .form textarea { height: auto; padding-top: 10px; }
+.ms-home .form input:focus, .ms-home .form select:focus, .ms-home .form textarea:focus { border-color: var(--ms-blue); box-shadow: inset 0 -1px 0 var(--ms-blue); }
+.ms-home .row-img img { border-radius: var(--ms-radius); box-shadow: var(--ms-shadow); }
+
+@media (max-width: 1083px) {
+  .ms-home .plain-services { grid-template-columns: repeat(2, 1fr); }
+  .ms-home .hero-caption h2 { font-size: 40px; line-height: 48px; }
+}
+@media (max-width: 860px) {
+  .ms-home .simple-about { grid-template-columns: 1fr; }
+  .ms-home .simple-about > div:first-child { padding: 24px; }
+  .ms-home .simple-about-img { order: -1; padding: 8px 8px 0; }
+}
+@media (max-width: 600px) {
+  .ms-home .container { padding: 0 16px; }
+  .ms-home .slider { height: 480px; }
+  .ms-home .plain-services { grid-template-columns: 1fr; }
+  .ms-home .hero-caption h2 { font-size: 32px; line-height: 40px; }
+  .ms-home .simple-title, .ms-home .sec-title .title, .ms-home .simple-band h2,
+  .ms-home .simple-about .simple-title { font-size: 24px; line-height: 32px; }
+}
+@media (max-width: 600px) { .ms-home .container.simple-about { width: calc(100% - 32px); } }
+
+/* =====================================================================
+   Header = microsoft.com navbar (measured at 1440px): 54px white bar, 5vw gutters,
+   logo then a left-aligned menu of 13px Segoe UI #262626 links (0 8px padding),
+   text actions on the right, underline on hover, white dropdowns with a soft shadow.
+   ===================================================================== */
+.ms-header {
+  position: sticky; top: 0; z-index: 50; background: #fff; box-shadow: none;
+  font-family: "Segoe UI", SegoeUI, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  transition: box-shadow .2s;
+}
+.ms-header.scrolled { box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.04); }
+.ms-header .header-inner,
+.ms-header.scrolled .header-inner {
+  display: flex; align-items: center; gap: 0; height: 54px; max-width: calc(1600px + 10vw); margin: 0 auto; padding: 0 5vw;
+  background: none; border: 0; border-radius: 0; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none;
+}
+.ms-header .brand { flex: none; width: auto; margin-right: 24px; }
+.ms-header .brand img { width: auto; height: 40px; max-height: none; }
+
+.ms-header .main-nav { flex: 1; justify-content: flex-start; }
+.ms-header .main-nav > ul { gap: 4px; }
+.ms-header .main-nav > ul > li > a {
+  display: inline-flex; align-items: center; gap: 4px; height: 54px; padding: 0 8px;
+  font: 400 13px/1 "Segoe UI", SegoeUI, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #262626; white-space: nowrap; text-underline-offset: 3px;
+}
+.ms-header .main-nav > ul > li:hover > a,
+.ms-header .main-nav > ul > li > a:focus-visible { color: #262626; text-decoration: underline; }
+.ms-header .main-nav > ul > li > a.active { color: #262626; font-weight: 600; }
+.ms-header .nav-chev { flex: none; color: #616161; transition: transform .2s; }
+.ms-header .main-nav > ul > li:hover > a .nav-chev { transform: rotate(180deg); }
+.ms-header .dropdown .nav-chev { transform: rotate(-90deg); }
+
+/* Dropdowns: white panel, 13px items, soft Fluent shadow */
+.ms-header .dropdown {
+  top: 100%; left: 0; min-width: 240px; padding: 8px 0; border: 0; border-radius: 0 0 4px 4px;
+  background: #fff; box-shadow: 0 8px 16px rgba(0,0,0,.14), 0 0 2px rgba(0,0,0,.12); transform: none; transition: opacity .15s, visibility .15s;
+}
+.ms-header .dropdown .dropdown { top: -8px; left: 100%; border: 0; border-radius: 4px; }
+.ms-header .dropdown a {
+  padding: 10px 16px; font: 400 13px/18px "Segoe UI", SegoeUI, "Helvetica Neue", Helvetica, Arial, sans-serif; color: #262626;
+}
+.ms-header .dropdown a:hover, .ms-header .dropdown a.active { padding-left: 16px; color: #262626; background: #f2f2f2; text-decoration: underline; }
+
+/* Right-side text actions (like "All Microsoft / Search / Cart") */
+.ms-header .header-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.ms-header .header-action,
+.ms-header .header-action.quote-btn {
+  display: inline-flex; align-items: center; gap: 6px; height: 54px; min-height: 0; padding: 0 8px;
+  font: 400 13px/1 "Segoe UI", SegoeUI, "Helvetica Neue", Helvetica, Arial, sans-serif; color: #262626;
+  background: none; border: 0; border-radius: 0; box-shadow: none; white-space: nowrap; text-underline-offset: 3px;
+}
+.ms-header .header-action:hover { color: #262626; text-decoration: underline; }
+.ms-header .header-action svg { color: #262626; }
+
+@media (max-width: 1180px) { .ms-header .hide-sm { display: none; } }
+@media (max-width: 991px) {
+  .ms-header .header-inner, .ms-header.scrolled .header-inner { height: 54px; padding: 0 16px; }
+  .ms-header .menu-toggle { display: flex; order: -1; margin: 0 8px 0 -8px; padding: 8px; color: #262626; background: none; border-radius: 0; }
+  .ms-header .main-nav > ul { gap: 0; }
+  .ms-header .main-nav > ul > li > a { display: flex; height: auto; padding: 14px 24px; font-size: 15px; }
+  .ms-header .nav-chev { display: none; }
+  .ms-header .dropdown, .ms-header .dropdown .dropdown { box-shadow: none; border-radius: 0; }
+  .ms-header .header-action.quote-btn { display: inline-flex; }
+}
+
+/* Navbar text a touch larger than microsoft.com's 13px */
+.ms-header .main-nav > ul > li > a,
+.ms-header .header-action, .ms-header .header-action.quote-btn { font-size: 14px; }
+.ms-header .dropdown a { font-size: 14px; line-height: 20px; }
+
+/* =====================================================================
+   Chat = microsoft.com "Need help? Let's chat" launcher + Store Assistant panel
+   launcher: fixed 12px from the corner, #0078d4, 16px radius, 10px 14px padding, 40px avatar
+   ===================================================================== */
+.fab-stack { right: 12px; bottom: 12px; gap: 12px; }
+.chat-launcher {
+  display: flex; align-items: center; gap: 12px; padding: 10px 14px; cursor: pointer;
+  font: 400 16px/24px "Segoe UI Variable Text", "Segoe UI", SegoeUI, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #fff; text-align: left; background: #0078d4; border: 1px solid #e6f2fb; border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.12), 0 8px 16px rgba(0,0,0,.12); transition: background-color .15s, transform .15s;
+  animation: chat-in .3s ease-out;
+}
+.chat-launcher:hover { background: #106ebe; }
+.chat-launcher:active { transform: scale(.98); }
+.chat-launcher:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+.chat-launcher-avatar {
+  position: relative; flex: none; width: 48px; height: 48px; padding: 3px; border-radius: 50%;
+  border: 1px solid #e6f2fb; background: linear-gradient(90deg, rgba(132,86,230,.25), rgba(22,123,190,.25));
+}
+.chat-launcher-avatar img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.chat-launcher-badge {
+  position: absolute; top: -4px; right: -6px; display: flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 50%; color: #0078d4; background: #fff; border: 1px solid #e6f2fb;
+}
+
+.chat-panel.ms-chat {
+  right: 12px; bottom: 12px; width: 430px; height: 620px; max-height: calc(100vh - 80px); min-height: 360px;
+  font-family: "Segoe UI Variable Text", "Segoe UI", SegoeUI, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: #f5f9fd; border: 1px solid #c7dff3; border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.14), 0 8px 16px rgba(0,0,0,.1);
+}
+.ms-chat .chat-head { gap: 16px; padding: 16px; color: #0e1726; background: #f5f9fd; border-bottom: 1px solid #d6e7f5; }
+.ms-chat .chat-avatar { width: 48px; height: 48px; border-radius: 12px; color: #0078d4; background: #fff; box-shadow: 0 0 2px rgba(0,0,0,.12); }
+.ms-chat .chat-head strong { font-size: 16px; font-weight: 600; color: #0e1726; }
+.ms-chat .chat-head-actions { display: flex; gap: 4px; margin-left: auto; }
+.ms-chat .chat-head-actions button {
+  margin: 0; display: flex; padding: 6px; border: 0; border-radius: 6px; color: #1b3a5c; background: none; cursor: pointer;
+}
+.ms-chat .chat-head-actions button:hover { background: #e3eef8; }
+.ms-chat .chat-body { gap: 12px; padding: 16px; background: #f5f9fd; }
+.ms-chat .msg { max-width: 92%; padding: 14px 16px; font-size: 16px; line-height: 24px; border-radius: 12px; }
+.ms-chat .msg.bot { color: #242424; background: #fff; border: 0; box-shadow: 0 0 2px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.08); }
+.ms-chat .msg.me { color: #fff; background: #0078d4; }
+.ms-chat .msg a { margin-top: 8px; font-size: 15px; font-weight: 600; color: #0067b8; }
+.ms-chat .quick { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+.ms-chat .quick button {
+  padding: 6px 14px; font-family: inherit; font-size: 14px; line-height: 20px; color: #0067b8;
+  background: #fff; border: 1px solid #0078d4; border-radius: 16px; cursor: pointer;
+}
+.ms-chat .quick button:hover { color: #fff; background: #0078d4; }
+.ms-chat .chat-foot { padding: 12px; background: #f5f9fd; border-top: 1px solid #d6e7f5; }
+.ms-chat .chat-foot form { display: block; padding: 10px 12px 6px; background: #fff; border: 2px solid #0078d4; border-radius: 8px; }
+.ms-chat .chat-foot textarea {
+  width: 100%; padding: 0; resize: none; border: 0; outline: none; background: none;
+  font-family: inherit; font-size: 15px; line-height: 22px; color: #242424;
+}
+.ms-chat .chat-input-bar { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #616161; }
+.ms-chat .chat-input-bar button { display: flex; width: auto; padding: 4px; border: 0; border-radius: 6px; color: #0078d4; background: none; cursor: pointer; }
+.ms-chat .chat-input-bar button:disabled { color: #a0b4c6; cursor: default; }
+@media (max-width: 600px) {
+  .chat-panel.ms-chat { right: 8px; left: 8px; bottom: 8px; width: auto; height: calc(100vh - 70px); }
+  .chat-launcher { padding: 8px 12px; font-size: 14px; line-height: 20px; }
+}
+
+/* Hero: highlighted phrase in the caption (first slide) */
+.hero-highlight { color: #6cb8f6; }
+.ms-home .hero-cta svg { margin-left: 2px; }
+
+/* ---------- Home: online meetings — photo + one gradient panel holding heading, steps and buttons ---------- */
+.ms-home .meet-card { display: grid; grid-template-columns: 5fr 7fr; gap: 16px; align-items: stretch; }
+.ms-home .meet-img { position: relative; overflow: hidden; border-radius: var(--ms-radius); box-shadow: var(--ms-shadow); }
+.ms-home .meet-img img { width: 100%; height: 100%; min-height: 420px; object-fit: cover; }
+.ms-home .meet-live {
+  position: absolute; left: 20px; bottom: 20px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px;
+  font-size: 14px; font-weight: 600; line-height: 20px; color: var(--ms-ink);
+  background: rgba(255,255,255,.9); border-radius: 999px; box-shadow: 0 4px 12px rgba(0,0,0,.15);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.ms-home .meet-live-dot { width: 10px; height: 10px; border-radius: 50%; background: #13a10e; animation: noc-ping 1.6s infinite; }
+
+.ms-home .meet-panel {
+  position: relative; overflow: hidden; padding: 40px; color: #fff; border-radius: var(--ms-radius);
+  background:
+    radial-gradient(420px circle at 100% 0%, rgba(80,230,255,.28), transparent 60%),
+    radial-gradient(360px circle at 0% 100%, rgba(134,97,197,.35), transparent 60%),
+    linear-gradient(135deg, #0b2545 0%, #0a3d7a 45%, #0067b8 100%);
+  box-shadow: 0 12px 32px rgba(0,40,90,.25);
+}
+.ms-home .meet-panel::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5;
+  background-image: radial-gradient(rgba(255,255,255,.12) 1.2px, transparent 1.2px); background-size: 22px 22px;
+  mask-image: linear-gradient(135deg, transparent 30%, #000 100%); -webkit-mask-image: linear-gradient(135deg, transparent 30%, #000 100%);
+}
+.ms-home .meet-panel > * { position: relative; z-index: 1; }
+.ms-home .meet-badge {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 16px; padding: 6px 14px;
+  font-size: 13px; font-weight: 600; line-height: 20px; color: #fff;
+  background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); border-radius: 999px;
+}
+.ms-home .meet-panel h2 { margin: 0 0 12px; font: 600 32px/40px var(--ms-font-display); color: #fff; }
+.ms-home .meet-panel .meet-intro { max-width: 560px; margin: 0 0 28px; font-size: 16px; line-height: 24px; color: rgba(255,255,255,.85); }
+
+.ms-home .meet-steps { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 0 28px; padding: 0; list-style: none; }
+.ms-home .meet-steps li {
+  padding: 20px; border-radius: 16px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); transition: background-color .2s, transform .2s;
+}
+.ms-home .meet-steps li:hover { background: rgba(255,255,255,.16); transform: translateY(-2px); }
+.ms-home .meet-icon {
+  position: relative; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; margin-bottom: 14px;
+  color: #0067b8; background: #fff; border-radius: 14px; box-shadow: 0 6px 16px rgba(0,0,0,.18);
+}
+.ms-home .meet-icon b {
+  position: absolute; top: -8px; right: -8px; display: flex; align-items: center; justify-content: center; width: 22px; height: 22px;
+  font-size: 12px; font-weight: 700; color: #0b2545; background: #50e6ff; border-radius: 50%; border: 2px solid #0a3d7a;
+}
+.ms-home .meet-steps h3 { margin: 0 0 6px; font: 600 18px/24px var(--ms-font-display); color: #fff; }
+.ms-home .meet-steps p { margin: 0; font-size: 14px; line-height: 21px; color: rgba(255,255,255,.82); }
+
+.ms-home .meet-panel .btn-row { gap: 12px; margin: 0; }
+.ms-home .meet-panel .btn-primary { color: var(--ms-ink); background: #fff; border-color: #fff; }
+.ms-home .meet-panel .btn-primary:hover, .ms-home .meet-panel .btn-primary:focus-visible { color: var(--ms-ink); background: #e6f2fb; border-color: #e6f2fb; }
+.ms-home .meet-panel .btn-outline { gap: 8px; color: #fff; background: transparent; border-color: rgba(255,255,255,.6); }
+.ms-home .meet-panel .btn-outline:hover, .ms-home .meet-panel .btn-outline:focus-visible { color: #fff; background: rgba(255,255,255,.12); border-color: #fff; }
+.ms-home .meet-panel .btn:focus-visible { outline-color: #fff; }
+
+@media (max-width: 1083px) {
+  .ms-home .meet-card { grid-template-columns: 1fr; }
+  .ms-home .meet-img img { min-height: 0; aspect-ratio: 16 / 9; }
+}
+@media (max-width: 600px) {
+  .ms-home .meet-panel { padding: 24px; }
+  .ms-home .meet-panel h2 { font-size: 24px; line-height: 32px; }
+  .ms-home .meet-steps { grid-template-columns: 1fr; }
+}
+
+/* Meeting section v2: wider photo frame (left), narrower panel (right), compact height */
+.ms-home .meet-section { padding: 40px 0; }
+.ms-home .meet-card { grid-template-columns: 7fr 5fr; gap: 16px; }
+.ms-home .meet-img {
+  padding: 10px; background: linear-gradient(135deg, #e6f2fb, #dceef8 60%, #ece6fb);
+  border: 1px solid var(--ms-border); border-radius: var(--ms-radius); box-shadow: var(--ms-shadow);
+}
+.ms-home .meet-img img { width: 100%; height: 100%; min-height: 0; object-fit: cover; object-position: 60% center; border-radius: 16px; }
+.ms-home .meet-live { left: 26px; bottom: 26px; }
+
+.ms-home .meet-panel { padding: 28px 28px 24px; }
+.ms-home .meet-badge { gap: 6px; margin-bottom: 14px; padding: 6px 12px; color: var(--ms-ink); background: #fff; border: 0; }
+.ms-home .meet-badge img { display: block; height: 18px; width: auto; }
+.ms-home .meet-badge-sep { width: 1px; height: 16px; margin: 0 4px; background: #d1d1d1; }
+.ms-home .meet-panel h2 { margin-bottom: 6px; font-size: 28px; line-height: 36px; }
+.ms-home .meet-panel .meet-intro { margin-bottom: 18px; font-size: 15px; line-height: 22px; }
+
+.ms-home .meet-steps { grid-template-columns: 1fr; gap: 8px; margin-bottom: 20px; }
+.ms-home .meet-steps li { display: flex; align-items: center; gap: 14px; padding: 10px 14px 10px 10px; border-radius: 14px; }
+.ms-home .meet-icon { flex: none; width: 52px; height: 52px; margin: 0; border-radius: 12px; background: #fff; }
+.ms-home .meet-icon img { width: 34px; height: 34px; object-fit: contain; }
+.ms-home .meet-icon b { top: -6px; right: -6px; width: 20px; height: 20px; font-size: 11px; }
+.ms-home .meet-steps h3 { margin: 0 0 2px; font-size: 16px; line-height: 22px; }
+.ms-home .meet-steps p { font-size: 13.5px; line-height: 19px; }
+.ms-home .meet-panel .btn { min-height: 40px; }
+
+@media (max-width: 1083px) {
+  .ms-home .meet-card { grid-template-columns: 1fr; }
+  .ms-home .meet-img img { aspect-ratio: 3 / 2; height: auto; }
+}
